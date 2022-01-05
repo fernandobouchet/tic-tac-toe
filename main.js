@@ -41,17 +41,21 @@ const game = (() => {
   };
 
   boardClass.forEach((element) => {
-    element.addEventListener("click", () => {
-      if (playerOneTurn) {
-        gameBoard.setSign(player1.getSign, element.id);
-        element.textContent = player1.getSign;
-        changeTurn();
-      } else {
-        gameBoard.setSign(player2.getSign, element.id);
-        element.textContent = player2.getSign;
-        changeTurn();
-      }
-    });
+    element.addEventListener(
+      "click",
+      () => {
+        if (playerOneTurn) {
+          gameBoard.setSign(player1.getSign, element.id);
+          element.textContent = player1.getSign;
+          changeTurn();
+        } else {
+          gameBoard.setSign(player2.getSign, element.id);
+          element.textContent = player2.getSign;
+          changeTurn();
+        }
+      },
+      { once: true }
+    );
   });
 
   return {};

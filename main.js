@@ -1,11 +1,18 @@
 const board = document.getElementById("board");
 const boardClass = document.querySelectorAll(".board");
-const result = document.getElementById("result");
+const resetButton = document.getElementById("restart");
+const gameStatus = document.getElementById("game-status");
+const playerOneName = document.getElementById("player-one-name");
+const playerTwoName = document.getElementById("player-two-name");
 
-const Player = (sign) => {
-  const getSign = sign;
+const Player = (name, sign) => {
+  const playerName = name;
+
+  const playerSign = sign;
+
   return {
-    getSign,
+    playerName,
+    playerSign,
   };
 };
 
@@ -37,47 +44,29 @@ const gameBoard = (() => {
 })();
 
 const game = (() => {
-  let player1 = Player("X");
-  let player2 = Player("O");
+  let player1 = Player(playerOneName.value, "X");
+  let player2 = Player(playerTwoName.value, "O");
   let playerOneTurn = true;
   let turn = 0;
   let gameEnd = false;
 
   const changeTurn = () => {
     playerOneTurn = !playerOneTurn;
+
+    if (playerOneTurn) {
+      gameStatus.textContent = `Its ${player1.playerName} TURN`;
+    } else {
+      gameStatus.textContent = `Its ${player2.playerName} TURN`;
+    }
     turn++;
   };
 
-  boardClass.forEach((element) => {
-    element.addEventListener(
-      "click",
-      () => {
-        if (!gameEnd) {
-          if (playerOneTurn) {
-            gameBoard.setSign(player1.getSign, element.id);
-            element.textContent = player1.getSign;
-            checkGame(parseInt(element.id), player1);
-            changeTurn();
-          } else {
-            gameBoard.setSign(player2.getSign, element.id);
-            element.textContent = player2.getSign;
-            checkGame(parseInt(element.id), player2);
-            changeTurn();
-          }
-        }
-      },
-      { once: true }
-    );
-  });
-
-  const playTurns = () => {};
-
   const checkGame = (index, player) => {
     if (checkWinner(index, player) === true) {
-      result.textContent = `${player} its the winner!`;
+      gameStatus.textContent = `${player.playerName} WINS!`;
       gameEnd = true;
-    } else if (turn === 8) {
-      result.textContent = `Its a tie`;
+    } else if (turn === 9) {
+      gameStatus.textContent = `Its a tie`;
       gameEnd = true;
     }
   };
@@ -99,16 +88,47 @@ const game = (() => {
       combination.includes(index)
     ).some((possibleCombination) =>
       possibleCombination.every(
-        (position) => gameBoard.getSign(position) === player.getSign
+        (position) => gameBoard.getSign(position) === player.playerSign
       )
     );
   };
 
-  const endGame = () => {
+  const start = () => {
+    player1 = Player(playerOneName.value, "X");
+    player2 = Player(playerTwoName.value, "O");
     boardClass.forEach((element) => {
-      element.removeEventListener("click", () => {});
+      element.addEventListener(
+        "click",
+        () => {
+          if (!gameEnd) {
+            if (playerOneTurn) {
+              gameBoard.setSign(player1.playerSign, element.id);
+              element.textContent = player1.playerSign;
+              changeTurn();
+              checkGame(parseInt(element.id), player1);
+            } else {
+              gameBoard.setSign(player2.playerSign, element.id);
+              element.textContent = player2.playerSign;
+              changeTurn();
+              checkGame(parseInt(element.id), player2);
+            }
+          }
+        },
+        { once: true }
+      );
     });
   };
+
+  const restart = () => {
+    playerOneTurn = true;
+    turn = 0;
+    gameEnd = false;
+    gameBoard.reset();
+    boardClass.forEach((element) => (element.textContent = ""));
+    start();
+  };
+
+  resetButton.addEventListener("click", restart);
 
   return {
     checkGame,

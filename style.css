@@ -1,7 +1,7 @@
 body {
   font-family: "Rubik Mono One", sans-serif;
   color: white;
-  background-color: #005f73;
+  background-color: #11151c;
   display: flex;
   flex-direction: column;
   text-align: center;
@@ -10,18 +10,19 @@ body {
 }
 
 header {
-  background-color: #001219;
+  background-color: #212d40;
   margin-bottom: 30px;
 }
 
 #game-status-div {
-  background-color: #001219;
+  background-color: #364156;
 }
 
 #players {
   display: flex;
   flex-direction: column;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 #form {
@@ -38,7 +39,7 @@ input {
 }
 
 button {
-  background-color: #001219;
+  background-color: #364156;
   border: solid;
   border-radius: 15px;
   font-family: inherit;
